@@ -23,6 +23,10 @@ export async function* readMessages(
 
     firstLine = false;
   }
+
+  if (!firstLine) {
+    yield message;
+  }
 }
 
 export type Message = {

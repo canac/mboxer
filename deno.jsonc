@@ -1,6 +1,7 @@
 {
   "tasks": {
     "dev": "deno run --watch --allow-read main.ts",
+    "test": "deno test --watch --allow-read ./lib .",
     "wasmbuild": "deno run -A https://deno.land/x/wasmbuild@0.10.2/main.ts"
   }
 }
