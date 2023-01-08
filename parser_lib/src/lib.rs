@@ -5,6 +5,7 @@ use wasm_bindgen::prelude::*;
 #[wasm_bindgen]
 pub struct MessageResult {
   from: Option<String>,
+  subject: Option<String>,
   date: Option<String>,
   content: Option<String>,
 }
@@ -14,6 +15,11 @@ impl MessageResult {
   #[wasm_bindgen(getter)]
   pub fn from(&self) -> Option<String> {
     self.from.clone()
+  }
+
+  #[wasm_bindgen(getter)]
+  pub fn subject(&self) -> Option<String> {
+    self.subject.clone()
   }
 
   #[wasm_bindgen(getter)]
@@ -45,6 +51,7 @@ pub fn parse_message(message: &str) -> MessageResult {
 
   MessageResult {
     from,
+    subject: message.subject().map(|message| message.to_string()),
     date: message.date().map(|date| date.to_rfc3339()),
     content: message.body_html(0).map(|html| {
       Builder::new()

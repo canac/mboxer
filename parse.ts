@@ -1,4 +1,5 @@
 import { instantiate } from "./lib/parser_lib.generated.js";
+import { Message } from "./message.ts";
 
 const { parse_message } = await instantiate();
 
@@ -29,17 +30,14 @@ export async function* readMessages(
   }
 }
 
-export type Message = {
-  from: string;
-  date: Date;
-  content: string;
-};
-
 // Parse a MIME-encoded message into its parts
 export function parseMessage(message: string): Message {
   const parsed = parse_message(message);
   if (!parsed.from) {
     throw new Error("Missing from");
+  }
+  if (!parsed.subject) {
+    throw new Error("Missing subject");
   }
   if (!parsed.date) {
     throw new Error("Missing date");
@@ -49,6 +47,7 @@ export function parseMessage(message: string): Message {
   }
   return {
     from: parsed.from,
+    subject: parsed.subject,
     date: new Date(parsed.date),
     content: parsed.content,
   };
