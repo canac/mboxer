@@ -13,5 +13,6 @@ lto = true
 opt-level = "z"
 
 [dependencies]
+ammonia = "3.3.0"
 mail-parser = { version = "0.8.0", default-features = false }
 wasm-bindgen = "=0.2.83"

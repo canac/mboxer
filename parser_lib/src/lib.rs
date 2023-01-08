@@ -1,3 +1,4 @@
+use ammonia::Builder;
 use mail_parser::{HeaderValue, Message};
 use wasm_bindgen::prelude::*;
 
@@ -45,6 +46,15 @@ pub fn parse_message(message: &str) -> MessageResult {
   MessageResult {
     from,
     date: message.date().map(|date| date.to_rfc3339()),
-    content: message.body_html(0).map(|html| html.to_string()),
+    content: message.body_html(0).map(|html| {
+      Builder::new()
+        .add_generic_attributes(["align", "class", "dir", "id"])
+        .add_tags(["address", "font", "main", "section", "style"])
+        .rm_clean_content_tags(["style"])
+        .clean(&html)
+        .to_string()
+        .trim()
+        .to_string()
+    }),
   }
 }
