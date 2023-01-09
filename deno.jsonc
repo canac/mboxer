@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "dev": "deno run --watch --allow-env=PORT,POSTGRES_URL --allow-net --allow-read=./lib main.ts",
+    "dev": "deno run --watch --allow-env=PORT,POSTGRES_URL --allow-net --allow-read=./lib,./static main.tsx",
     "test": "deno test --watch --allow-read ./lib .",
     "wasmbuild": "deno run -A https://deno.land/x/wasmbuild@0.10.2/main.ts"
   }

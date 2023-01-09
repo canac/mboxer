@@ -1,9 +1,14 @@
+/** @jsx h */
 import { serve } from "https://deno.land/std@0.171.0/http/server.ts";
 import { readLines } from "https://deno.land/std@0.171.0/io/mod.ts";
 import { readerFromStreamReader } from "https://deno.land/std@0.171.0/streams/mod.ts";
+import html, { h } from "https://deno.land/x/htm@0.1.3/mod.ts";
 import { Hono } from "https://deno.land/x/hono@v3.0.0-rc.4/mod.ts";
+import { serveStatic } from "https://deno.land/x/hono@v3.0.0-rc.4/middleware.ts";
 import { z } from "https://deno.land/x/zod@v3.20.2/mod.ts";
 import { Database } from "./db.ts";
+import { Layout } from "./pages/Layout.tsx";
+import { Messages } from "./pages/Messages.tsx";
 import { parseMessage, readMessages } from "./parse.ts";
 
 const envSchema = z.object({
@@ -18,7 +23,19 @@ const env = envSchema.parse({
 const db = new Database(env.POSTGRES_URL);
 
 const app = new Hono();
-app.get("/", async (c) => {
+app.use("/static/*", serveStatic({ root: "./" }));
+app.get("/", async () => {
+  const messages = await db.getMessages();
+  return html({
+    body: (
+      <Layout>
+        <Messages messages={messages} />
+      </Layout>
+    ),
+    links: [
+      { rel: "stylesheet", href: "/static/styles.css" },
+    ],
+  });
 });
 app.post("/import", async (c) => {
   const form = await c.req.formData();

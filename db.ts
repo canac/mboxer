@@ -1,11 +1,37 @@
 import { Client } from "https://deno.land/x/postgres@v0.17.0/mod.ts";
-import { Message } from "./message.ts";
+import { z } from "https://deno.land/x/zod@v3.20.2/mod.ts";
+import {
+  Message,
+  MessageWithId,
+  schemaWithId as messageSchema,
+} from "./message.ts";
+
+const messagesSchema = z.array(messageSchema);
 
 export class Database {
   #client: Promise<Client>;
 
   constructor(connectionUrl: string) {
     this.#client = Database.#connect(connectionUrl);
+  }
+
+  // Load all messages from the database
+  async getMessages(): Promise<Array<MessageWithId>> {
+    const client = await this.#client;
+    const { rows } = await client.queryObject(
+      'SELECT id, "from", subject, date, content FROM message ORDER BY date',
+    );
+    return messagesSchema.parse(rows);
+  }
+
+  // Load one messages from the database by its id
+  async getMessage(id: string): Promise<MessageWithId | null> {
+    const client = await this.#client;
+    const { rows: [row] } = await client.queryObject(
+      'SELECT id, "from", subject, date, content FROM message WHERE id=$id',
+      { id },
+    );
+    return row ? messageSchema.parse(row) : null;
   }
 
   // Remove all messages from the database
