@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const schema = z.object({
-  from: z.string(),
+  sender: z.string(),
   subject: z.string(),
   date: z.coerce.date(),
   content: z.string(),

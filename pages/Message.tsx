@@ -11,7 +11,7 @@ export function Message(props: { message: MessageWithId }): JSX.Element {
     <div class="message">
       <h2>{props.message.subject}</h2>
       <div class="header">
-        <span class="from">{props.message.from}</span>
+        <span class="sender">{props.message.sender}</span>
         <span class="date">{dateFormatter.format(props.message.date)}</span>
       </div>
       <div

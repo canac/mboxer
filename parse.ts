@@ -33,8 +33,8 @@ export async function* readMessages(
 // Parse a MIME-encoded message into its parts
 export function parseMessage(message: string): Message {
   const parsed = parse_message(message);
-  if (!parsed.from) {
-    throw new Error("Missing from");
+  if (!parsed.sender) {
+    throw new Error("Missing sender");
   }
   if (!parsed.subject) {
     throw new Error("Missing subject");
@@ -46,7 +46,7 @@ export function parseMessage(message: string): Message {
     throw new Error("Missing content");
   }
   return {
-    from: parsed.from,
+    sender: parsed.sender,
     subject: parsed.subject,
     date: new Date(parsed.date),
     content: parsed.content,

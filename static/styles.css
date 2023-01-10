@@ -81,7 +81,7 @@ a:active.message-row {
   justify-content: space-between;
 
 }
-.message .header .from {
+.message .header .sender {
   font-weight: bold;
 }
 .message .header .date {

@@ -19,7 +19,7 @@ export class Database {
   async getMessages(): Promise<Array<MessageWithId>> {
     const client = await this.#client;
     const { rows } = await client.queryObject(
-      'SELECT id, "from", subject, date, content FROM message ORDER BY date',
+      "SELECT id, sender, subject, date, content FROM message ORDER BY date",
     );
     return messagesSchema.parse(rows);
   }
@@ -29,7 +29,7 @@ export class Database {
     const client = await this.#client;
     try {
       const { rows: [row] } = await client.queryObject(
-        'SELECT id, "from", subject, date, content FROM message WHERE id=$id',
+        "SELECT id, sender, subject, date, content FROM message WHERE id=$id",
         { id },
       );
       return row ? messageSchema.parse(row) : null;
@@ -47,10 +47,10 @@ export class Database {
   // Insert a new message into the database
   async insertMessage(message: Message): Promise<void> {
     const client = await this.#client;
-    const { from, subject, date, content } = message;
+    const { sender, subject, date, content } = message;
     await client.queryObject(
-      'INSERT INTO message ("from", subject, date, content) VALUES ($from, $subject, $date, $content)',
-      { from, subject, date: date.toISOString(), content },
+      "INSERT INTO message (sender, subject, date, content) VALUES ($sender, $subject, $date, $content)",
+      { sender, subject, date: date.toISOString(), content },
     );
   }
 

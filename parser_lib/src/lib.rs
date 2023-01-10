@@ -4,7 +4,7 @@ use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 pub struct MessageResult {
-  from: Option<String>,
+  sender: Option<String>,
   subject: Option<String>,
   date: Option<String>,
   content: Option<String>,
@@ -13,8 +13,8 @@ pub struct MessageResult {
 #[wasm_bindgen]
 impl MessageResult {
   #[wasm_bindgen(getter)]
-  pub fn from(&self) -> Option<String> {
-    self.from.clone()
+  pub fn sender(&self) -> Option<String> {
+    self.sender.clone()
   }
 
   #[wasm_bindgen(getter)]
@@ -37,7 +37,7 @@ impl MessageResult {
 pub fn parse_message(message: &str) -> MessageResult {
   let message = Message::parse(message.as_bytes()).unwrap();
 
-  let from = match message.from() {
+  let sender = match message.from() {
     HeaderValue::Address(address) => {
       match (address.name.as_ref(), address.address.as_ref()) {
         (None, None) => None,
@@ -50,7 +50,7 @@ pub fn parse_message(message: &str) -> MessageResult {
   };
 
   MessageResult {
-    from,
+    sender,
     subject: message.subject().map(|message| message.to_string()),
     date: message.date().map(|date| date.to_rfc3339()),
     content: message.body_html(0).map(|html| {
