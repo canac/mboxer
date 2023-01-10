@@ -1,4 +1,5 @@
 /** @jsx h */
+import { load } from "std/dotenv/mod.ts";
 import { serve } from "std/http/server.ts";
 import { readLines } from "std/io/mod.ts";
 import { readerFromStreamReader } from "std/streams/mod.ts";
@@ -10,6 +11,12 @@ import { Database } from "./db.ts";
 import { Layout } from "./pages/Layout.tsx";
 import { Messages } from "./pages/Messages.tsx";
 import { parseMessage, readMessages } from "./parse.ts";
+
+await load({
+  export: true,
+  examplePath: "",
+  restrictEnvAccessTo: ["PORT", "POSTGRES_URL"],
+});
 
 const envSchema = z.object({
   PORT: z.coerce.number().optional(),
