@@ -1,11 +1,13 @@
 /** @jsx h */
-/** @jsxFrag Fragment */
-import { Fragment, h, JSX } from "htm";
+import { h, JSX } from "htm";
 import { MessageWithId } from "../message.ts";
 
 export function Messages(props: { messages: MessageWithId[] }): JSX.Element {
+  const dateFormatter = new Intl.DateTimeFormat("en-US", {
+    dateStyle: "long",
+  });
   return (
-    <>
+    <div class="messages">
       <h2>Messages</h2>
       <div class="message-row header">
         <span class="from">From</span>
@@ -16,9 +18,9 @@ export function Messages(props: { messages: MessageWithId[] }): JSX.Element {
         <a href={`/message/${message.id}`} class="message-row">
           <span>{message.from}</span>
           <span>{message.subject}</span>
-          <span>{message.date}</span>
+          <span>{dateFormatter.format(message.date)}</span>
         </a>
       ))}
-    </>
+    </div>
   );
 }

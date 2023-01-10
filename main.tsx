@@ -3,13 +3,14 @@ import { load } from "std/dotenv/mod.ts";
 import { serve } from "std/http/server.ts";
 import { readLines } from "std/io/mod.ts";
 import { readerFromStreamReader } from "std/streams/mod.ts";
-import html, { h } from "htm";
+import html, { h, JSX } from "htm";
 import { Hono } from "hono";
 import { serveStatic } from "hono/middleware";
 import { z } from "zod";
 import { Database } from "./db.ts";
 import { Layout } from "./pages/Layout.tsx";
 import { Messages } from "./pages/Messages.tsx";
+import { Message } from "./pages/Message.tsx";
 import { parseMessage, readMessages } from "./parse.ts";
 
 await load({
@@ -29,20 +30,36 @@ const env = envSchema.parse({
 
 const db = new Database(env.POSTGRES_URL);
 
-const app = new Hono();
-app.use("/static/*", serveStatic({ root: "./" }));
-app.get("/", async () => {
-  const messages = await db.getMessages();
+function document(body: JSX.Element): Promise<Response> {
   return html({
-    body: (
-      <Layout>
-        <Messages messages={messages} />
-      </Layout>
-    ),
+    body,
     links: [
       { rel: "stylesheet", href: "/static/styles.css" },
     ],
   });
+}
+
+const app = new Hono();
+app.use("/static/*", serveStatic({ root: "./" }));
+app.get("/", async () => {
+  const messages = await db.getMessages();
+  return document(
+    <Layout>
+      <Messages messages={messages} />
+    </Layout>,
+  );
+});
+app.get("/message/:id", async (c) => {
+  const id = c.req.param("id");
+  const message = await db.getMessage(id);
+  if (!message) {
+    return c.notFound();
+  }
+  return document(
+    <Layout>
+      <Message message={message} />
+    </Layout>,
+  );
 });
 app.post("/import", async (c) => {
   const form = await c.req.formData();

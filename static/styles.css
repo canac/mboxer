@@ -31,18 +31,21 @@ h1 {
 .message-row {
   display: flex;
   overflow: hidden;
-  text-decoration: none;
   padding: var(--size-1);
 }
 
 a {
   color: inherit;
+  text-decoration: none;
+}
+
+a.message-row {
   border-radius: var(--radius-2);
 }
-a:hover {
+a:hover.message-row {
   background-color: var(--blue-1);
 }
-a:active {
+a:active.message-row {
   background-color: var(--blue-2);
 }
 
@@ -56,15 +59,31 @@ a:active {
   flex: 1;
 }
 .message-row :nth-child(2) {
-  flex: 2;
+  flex: 1;
 }
 .message-row :nth-child(3) {
-  width: 8rem;
+  width: 10rem;
 }
 
 .header {
-  font-weight: var(--font-weight-7);
   margin-bottom: var(--size-2);
   padding-bottom: var(--size-1);
   border-bottom: var(--border-size-1) solid black;
+}
+
+.messages .header {
+  font-weight: var(--font-weight-7);
+}
+
+.message .header {
+  font-size: var(--font-size-0);
+  display: flex;
+  justify-content: space-between;
+
+}
+.message .header .from {
+  font-weight: bold;
+}
+.message .header .date {
+  color: var(--gray-6);
 }

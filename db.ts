@@ -27,11 +27,15 @@ export class Database {
   // Load one messages from the database by its id
   async getMessage(id: string): Promise<MessageWithId | null> {
     const client = await this.#client;
-    const { rows: [row] } = await client.queryObject(
-      'SELECT id, "from", subject, date, content FROM message WHERE id=$id',
-      { id },
-    );
-    return row ? messageSchema.parse(row) : null;
+    try {
+      const { rows: [row] } = await client.queryObject(
+        'SELECT id, "from", subject, date, content FROM message WHERE id=$id',
+        { id },
+      );
+      return row ? messageSchema.parse(row) : null;
+    } catch (_) {
+      return null;
+    }
   }
 
   // Remove all messages from the database

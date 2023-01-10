@@ -8,7 +8,9 @@ export function Layout(
   return (
     <>
       <nav>
-        <h1>mboxer</h1>
+        <a href="/">
+          <h1>mboxer</h1>
+        </a>
       </nav>
       <main>{props.children}</main>
     </>
