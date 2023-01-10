@@ -1,5 +1,5 @@
-import { Client } from "https://deno.land/x/postgres@v0.17.0/mod.ts";
-import { z } from "https://deno.land/x/zod@v3.20.2/mod.ts";
+import { Client } from "postgres";
+import { z } from "zod";
 import {
   Message,
   MessageWithId,

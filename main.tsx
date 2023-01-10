@@ -1,11 +1,11 @@
 /** @jsx h */
-import { serve } from "https://deno.land/std@0.171.0/http/server.ts";
-import { readLines } from "https://deno.land/std@0.171.0/io/mod.ts";
-import { readerFromStreamReader } from "https://deno.land/std@0.171.0/streams/mod.ts";
-import html, { h } from "https://deno.land/x/htm@0.1.3/mod.ts";
-import { Hono } from "https://deno.land/x/hono@v3.0.0-rc.4/mod.ts";
-import { serveStatic } from "https://deno.land/x/hono@v3.0.0-rc.4/middleware.ts";
-import { z } from "https://deno.land/x/zod@v3.20.2/mod.ts";
+import { serve } from "std/http/server.ts";
+import { readLines } from "std/io/mod.ts";
+import { readerFromStreamReader } from "std/streams/mod.ts";
+import html, { h } from "htm";
+import { Hono } from "hono";
+import { serveStatic } from "hono/middleware";
+import { z } from "zod";
 import { Database } from "./db.ts";
 import { Layout } from "./pages/Layout.tsx";
 import { Messages } from "./pages/Messages.tsx";

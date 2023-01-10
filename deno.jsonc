@@ -1,4 +1,5 @@
 {
+  "importMap": "import_map.json",
   "tasks": {
     "dev": "deno run --watch --allow-env=PORT,POSTGRES_URL --allow-net --allow-read=./lib,./static main.tsx",
     "test": "deno test --watch --allow-read ./lib .",

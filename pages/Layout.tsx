@@ -1,6 +1,6 @@
 /** @jsx h */
 /** @jsxFrag Fragment */
-import { Fragment, h, JSX } from "https://deno.land/x/htm@0.1.3/html.tsx";
+import { Fragment, h, JSX } from "htm";
 
 export function Layout(
   props: { children?: JSX.Element },
