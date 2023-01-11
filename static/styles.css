@@ -28,6 +28,23 @@ h1 {
   font-size: var(--font-size-6);
 }
 
+input, button {
+  height: var(--font-size-6);
+  padding: var(--size-2);
+  background-color: var(--gray-1);
+  border: var(--border-size-1) solid var(--gray-6);
+  border-radius: var(--radius-2);
+}
+button:hover {
+  background-color: var(--gray-2);
+}
+button:active {
+  background-color: var(--gray-3);
+}
+button {
+  padding: var(--size-2) var(--size-6);
+}
+
 .search {
   display: flex;
   align-items: center;
@@ -35,15 +52,6 @@ h1 {
 }
 .search input {
   flex: 1;
-}
-.search button {
-  width: 6em;
-}
-.search input, button {
-  height: var(--font-size-6);
-  border: var(--border-size-1) solid var(--gray-6);
-  padding: var(--size-2);
-  border-radius: var(--radius-2);
 }
 
 .message-row {
@@ -97,11 +105,42 @@ a:active.message-row {
   font-size: var(--font-size-0);
   display: flex;
   justify-content: space-between;
-
 }
 .message .header .sender {
   font-weight: bold;
 }
 .message .header .date {
   color: var(--gray-6);
+}
+
+.login {
+  width: 100%;
+  margin: var(--size-8) auto;
+  display: flex;
+  justify-content: center;
+}
+
+.login form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--size-6) ;
+  padding: var(--size-8);
+  background-color: var(--blue-4);
+  border-radius: var(--border-size-4);
+  width: var(--size-content-2);
+  box-shadow: var(--shadow-3);
+}
+
+.login h2 {
+  font-size: var(--font-size-6);
+  color: white;
+  text-align: center;
+  margin-top: 0;
+}
+.login input {
+  width: 100%;
+}
+.login button {
+  padding: var(--size-2) var(--size-8);
 }
