@@ -16,10 +16,14 @@ export class Database {
   }
 
   // Load all messages from the database
-  async getMessages(): Promise<Array<MessageWithId>> {
+  async getMessages(search: string | null): Promise<Array<MessageWithId>> {
     const client = await this.#client;
+    const filter = search
+      ? "WHERE sender ILIKE '%' || $search || '%' OR subject ILIKE '%' || $search || '%' OR content ILIKE '%' || $search || '%'"
+      : "";
     const { rows } = await client.queryObject(
-      "SELECT id, sender, subject, date, content FROM message ORDER BY date",
+      `SELECT id, sender, subject, date, content FROM message ${filter} ORDER BY date`,
+      { search },
     );
     return messagesSchema.parse(rows);
   }

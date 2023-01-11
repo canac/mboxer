@@ -41,11 +41,12 @@ function document(body: JSX.Element): Promise<Response> {
 
 const app = new Hono();
 app.use("/static/*", serveStatic({ root: "./" }));
-app.get("/", async () => {
-  const messages = await db.getMessages();
+app.get("/", async (c) => {
+  const search = c.req.query("search") ?? null;
+  const messages = await db.getMessages(search);
   return document(
     <Layout>
-      <Messages messages={messages} />
+      <Messages messages={messages} search={search} />
     </Layout>,
   );
 });

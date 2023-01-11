@@ -28,6 +28,24 @@ h1 {
   font-size: var(--font-size-6);
 }
 
+.search {
+  display: flex;
+  align-items: center;
+  gap: var(--size-4);
+}
+.search input {
+  flex: 1;
+}
+.search button {
+  width: 6em;
+}
+.search input, button {
+  height: var(--font-size-6);
+  border: var(--border-size-1) solid var(--gray-6);
+  padding: var(--size-2);
+  border-radius: var(--radius-2);
+}
+
 .message-row {
   display: flex;
   overflow: hidden;

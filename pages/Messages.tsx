@@ -2,13 +2,23 @@
 import { h, JSX } from "htm";
 import { MessageWithId } from "../message.ts";
 
-export function Messages(props: { messages: MessageWithId[] }): JSX.Element {
+export function Messages(
+  props: { messages: MessageWithId[]; search: string | null },
+): JSX.Element {
   const dateFormatter = new Intl.DateTimeFormat("en-US", {
     dateStyle: "long",
   });
   return (
     <div class="messages">
-      <h2>Messages</h2>
+      <form class="search">
+        <h2>Messages</h2>
+        <input
+          name="search"
+          placeholder="Search messages..."
+          value={props.search ?? ""}
+        />
+        <button type="submit">Search</button>
+      </form>
       <div class="message-row header">
         <span class="sender">Sender</span>
         <span class="subject">Subject</span>
