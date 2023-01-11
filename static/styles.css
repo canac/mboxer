@@ -58,6 +58,7 @@ button {
   display: flex;
   overflow: hidden;
   padding: var(--size-1);
+  gap: var(--size-4);
 }
 
 a {
