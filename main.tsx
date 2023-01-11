@@ -33,6 +33,7 @@ const db = new Database(env.POSTGRES_URL);
 function document(body: JSX.Element): Promise<Response> {
   return html({
     body,
+    scripts: [{ src: "/static/script.js" }],
     links: [
       { rel: "stylesheet", href: "/static/styles.css" },
     ],

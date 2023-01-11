@@ -14,10 +14,7 @@ export function Message(props: { message: MessageWithId }): JSX.Element {
         <span class="sender">{props.message.sender}</span>
         <span class="date">{dateFormatter.format(props.message.date)}</span>
       </div>
-      <div
-        class="content"
-        dangerouslySetInnerHTML={{ __html: props.message.content }}
-      />
+      <div class="content" data-content={props.message.content} />
     </div>
   );
 }
