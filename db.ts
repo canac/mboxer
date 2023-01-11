@@ -22,7 +22,7 @@ export class Database {
       ? "WHERE sender ILIKE '%' || $search || '%' OR subject ILIKE '%' || $search || '%' OR content ILIKE '%' || $search || '%'"
       : "";
     const { rows } = await client.queryObject(
-      `SELECT id, sender, subject, date, content FROM message ${filter} ORDER BY date LIMIT 100`,
+      `SELECT id, sender, subject, date, content FROM message ${filter} ORDER BY date DESC LIMIT 100`,
       { search },
     );
     return messagesSchema.parse(rows);
