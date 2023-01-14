@@ -1,9 +1,11 @@
 use ammonia::Builder;
 use mail_parser::{HeaderValue, Message};
+use uuid::{uuid, Uuid};
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 pub struct MessageResult {
+  id: String,
   sender: Option<String>,
   subject: Option<String>,
   date: Option<String>,
@@ -12,6 +14,11 @@ pub struct MessageResult {
 
 #[wasm_bindgen]
 impl MessageResult {
+  #[wasm_bindgen(getter)]
+  pub fn id(&self) -> String {
+    self.id.clone()
+  }
+
   #[wasm_bindgen(getter)]
   pub fn sender(&self) -> Option<String> {
     self.sender.clone()
@@ -33,9 +40,17 @@ impl MessageResult {
   }
 }
 
+const NAMESPACE: Uuid = uuid!("3ea7556b-df2f-4126-9ffc-3e367fc8fb43");
+
 #[wasm_bindgen]
-pub fn parse_message(message: &str) -> MessageResult {
-  let message = Message::parse(message.as_bytes()).unwrap();
+pub fn parse_message(raw_message: &str) -> MessageResult {
+  let message = Message::parse(raw_message.as_bytes()).unwrap();
+
+  let id = Uuid::new_v5(
+    &NAMESPACE,
+    // Use the id or the message contents itself to generate the uuid
+    message.message_id().unwrap_or(raw_message).as_bytes(),
+  );
 
   let sender = match message.from() {
     HeaderValue::Address(address) => {
@@ -50,6 +65,7 @@ pub fn parse_message(message: &str) -> MessageResult {
   };
 
   MessageResult {
+    id: id.to_string(),
     sender,
     subject: message.subject().map(|message| message.to_string()),
     date: message.date().map(|date| date.to_rfc3339()),

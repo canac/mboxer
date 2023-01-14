@@ -90,8 +90,6 @@ app.post("/import", async (c) => {
   const reader = readerFromStreamReader(mbox.stream().getReader());
   const messages = readMessages(readLines(reader));
 
-  await db.truncateMessages();
-
   let count = 0;
   let errors = 0;
   for await (const rawMessage of messages) {

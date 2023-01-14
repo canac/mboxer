@@ -46,6 +46,7 @@ export function parseMessage(message: string): Message {
     throw new Error("Missing content");
   }
   return {
+    id: parsed.id,
     sender: parsed.sender,
     subject: parsed.subject,
     date: new Date(parsed.date),

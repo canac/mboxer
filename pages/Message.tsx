@@ -1,8 +1,8 @@
 /** @jsx h */
 import { h, JSX } from "htm";
-import { MessageWithId } from "../message.ts";
+import { Message } from "../message.ts";
 
-export function Message(props: { message: MessageWithId }): JSX.Element {
+export function Message(props: { message: Message }): JSX.Element {
   const dateFormatter = new Intl.DateTimeFormat("en-US", {
     dateStyle: "full",
     timeStyle: "long",

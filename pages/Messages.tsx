@@ -1,9 +1,9 @@
 /** @jsx h */
 import { h, JSX } from "htm";
-import { MessageWithId } from "../message.ts";
+import { Message } from "../message.ts";
 
 export function Messages(
-  props: { messages: MessageWithId[]; search: string | null },
+  props: { messages: Message[]; search: string | null },
 ): JSX.Element {
   const dateFormatter = new Intl.DateTimeFormat("en-US", {
     dateStyle: "long",
