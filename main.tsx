@@ -42,7 +42,7 @@ app.use(
 app.use("/static/*", serveStatic({ root: "./" }));
 app.get("/login", (_) => {
   return document(
-    <Layout>
+    <Layout page="login">
       <Login />
     </Layout>,
   );
@@ -63,7 +63,7 @@ app.get("/", async (c) => {
   const search = c.req.query("search") ?? null;
   const messages = await db.getMessages(search);
   return document(
-    <Layout>
+    <Layout page="messages">
       <Messages messages={messages} search={search} />
     </Layout>,
   );
@@ -75,7 +75,7 @@ app.get("/message/:id", async (c) => {
     return c.notFound();
   }
   return document(
-    <Layout>
+    <Layout page="message">
       <Message message={message} />
     </Layout>,
   );

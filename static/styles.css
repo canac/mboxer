@@ -54,11 +54,68 @@ button {
   flex: 1;
 }
 
-.message-row {
-  display: flex;
+.message-row > * {
   overflow: hidden;
-  padding: var(--size-1);
-  gap: var(--size-4);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (min-width: 800px) {
+  .message-row {
+    display: flex;
+    overflow: hidden;
+    flex-direction: row;
+    padding: var(--size-1) var(--size-2);
+    gap: var(--size-4);
+  }
+
+  .message-row :nth-child(1) {
+    flex: 1;
+  }
+  .message-row :nth-child(2) {
+    flex: 1;
+  }
+  .message-row :nth-child(3) {
+    width: 10rem;
+  }
+}
+
+@media (max-width: 799px) {
+  #messages-page main {
+    padding: 0;
+  }
+
+  .search {
+    padding: var(--size-3);
+  }
+
+  .search h2 {
+    display: none;
+  }
+
+  .messages {
+    display: flex;
+    flex-direction: column;
+    gap: var(--size-1);
+  }
+
+  .message-row {
+    display: flex;
+    flex-direction: column;
+    padding: var(--size-2) var(--size-3);
+    gap: var(--size-1);
+  }
+
+  .message-row :nth-child(2) {
+    font-weight: var(--font-weight-7);
+  }
+  .message-row :nth-child(3) {
+    font-size: var(--font-size-0);
+  }
+
+  .message-row.header {
+    display: none;
+  }
 }
 
 a {
@@ -74,22 +131,6 @@ a:hover.message-row {
 }
 a:active.message-row {
   background-color: var(--blue-2);
-}
-
-.message-row > * {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.message-row :nth-child(1) {
-  flex: 1;
-}
-.message-row :nth-child(2) {
-  flex: 1;
-}
-.message-row :nth-child(3) {
-  width: 10rem;
 }
 
 .header {
