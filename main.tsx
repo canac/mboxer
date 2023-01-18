@@ -19,6 +19,10 @@ const db = new Database(env.POSTGRES_URL);
 function document(body: JSX.Element): Promise<Response> {
   return html({
     body,
+    headers: {
+      "Content-Security-Policy":
+        "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://unpkg.com; font-src *; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content; base-uri 'none';",
+    },
     scripts: [{ src: "/static/script.js" }],
     links: [
       { rel: "stylesheet", href: "/static/styles.css" },
