@@ -15,9 +15,16 @@ nav {
   border-bottom: var(--border-size-1) solid var(--gray-4);
   background-color: var(--gray-1);
 }
+nav > * {
+  align-self: center;
+  margin: 0 var(--size-4);
+}
+nav > :first-child {
+  flex: 1;
+}
 
 nav h1 {
-  margin: var(--size-4);
+  text-align: center;
 }
 
 main {
@@ -155,14 +162,14 @@ a:active.message-row {
   color: var(--gray-6);
 }
 
-.login {
+.login, .import {
   display: flex;
   width: 100%;
   justify-content: center;
   margin: var(--size-8) auto;
 }
 
-.login form {
+.login form, .import form {
   display: flex;
   width: var(--size-content-2);
   flex-direction: column;
@@ -174,15 +181,20 @@ a:active.message-row {
   gap: var(--size-6) ;
 }
 
-.login h2 {
+.login h2, .import h2 {
   margin-top: 0;
   color: white;
   font-size: var(--font-size-6);
   text-align: center;
 }
-.login input {
+.login input, .import input {
   width: 100%;
 }
-.login button {
+.login button, .import button {
   padding: var(--size-2) var(--size-8);
+}
+
+input[type=file]::file-selector-button {
+  height: 100%;
+  margin-right: var(--size-2);
 }

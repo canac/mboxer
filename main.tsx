@@ -10,6 +10,7 @@ import { Database } from "./db.ts";
 import { env } from "./env.ts";
 import { Layout } from "./pages/Layout.tsx";
 import { Login } from "./pages/Login.tsx";
+import { Import } from "./pages/Import.tsx";
 import { Messages } from "./pages/Messages.tsx";
 import { Message } from "./pages/Message.tsx";
 import { parseMessage, readMessages } from "./parse.ts";
@@ -84,6 +85,13 @@ app.get("/message/:id", async (c) => {
     </Layout>,
   );
 });
+app.get("/import", (_) => {
+  return document(
+    <Layout page="import">
+      <Import />
+    </Layout>,
+  );
+});
 app.post("/import", async (c) => {
   const form = await c.req.formData();
   const mbox = form.get("mailbox");
@@ -96,9 +104,11 @@ app.post("/import", async (c) => {
 
   let count = 0;
   let errors = 0;
+  const insertPromises: Promise<void>[] = [];
   for await (const rawMessage of messages) {
     try {
-      db.insertMessage(parseMessage(rawMessage));
+      // Insert the messages in parallel and wait for all of them at the end
+      insertPromises.push(db.insertMessage(parseMessage(rawMessage)));
       ++count;
     } catch (err) {
       console.error(err);
@@ -106,6 +116,10 @@ app.post("/import", async (c) => {
     }
   }
 
+  await Promise.all(insertPromises);
   return c.text(`Imported ${count} emails with ${errors} errors`);
+});
+app.onError((error, c) => {
+  return c.text(error.message, 500);
 });
 serve(app.fetch, { port: env.PORT });

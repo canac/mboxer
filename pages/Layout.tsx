@@ -13,6 +13,11 @@ export function Layout(
         <a href="/">
           <h1>mboxer</h1>
         </a>
+        {props.page !== "login" && (
+          <a href="/import">
+            <h2>Import</h2>
+          </a>
+        )}
       </nav>
       <main>{props.children}</main>
     </body>
