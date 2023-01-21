@@ -32,19 +32,20 @@ function document(body: JSX.Element): Promise<Response> {
 }
 
 const app = new Hono();
+app.use("/static/*", serveStatic({ root: "./" }));
 app.use(
   "*",
   async (c, next) => {
-    if (
-      new URL(c.req.url).pathname === "/login" || await isAuthenticated(c.req)
-    ) {
+    const authenticated = await isAuthenticated(c.req);
+    if (new URL(c.req.url).pathname === "/login" !== authenticated) {
+      // Passthrough if the user is unauthenticated and is going to the login
+      // page or is authenticated and isn't going to the login page
       return next();
     } else {
-      return c.redirect("/login");
+      return c.redirect(authenticated ? "/" : "/login", 303);
     }
   },
 );
-app.use("/static/*", serveStatic({ root: "./" }));
 app.get("/login", (_) => {
   return document(
     <Layout page="login">
