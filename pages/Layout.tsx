@@ -10,6 +10,11 @@ export function Layout(
   return (
     <body id={`${props.page}-page`}>
       <nav>
+        {props.page !== "login" && (
+          <form action="/logout" method="post">
+            <button type="submit">Logout</button>
+          </form>
+        )}
         <a href="/">
           <h1>mboxer</h1>
         </a>

@@ -5,7 +5,7 @@ import { readerFromStreamReader } from "std/streams/mod.ts";
 import html, { h, JSX } from "htm";
 import { Hono } from "hono";
 import { serveStatic } from "hono/middleware";
-import { isAuthenticated, login } from "./auth.ts";
+import { isAuthenticated, login, logout } from "./auth.ts";
 import { Database } from "./db.ts";
 import { env } from "./env.ts";
 import { Layout } from "./pages/Layout.tsx";
@@ -65,6 +65,7 @@ app.post("/login", async (c) => {
     return new Response(err.toString() ?? "Forbidden", { status: 403 });
   }
 });
+app.post("/logout", (_) => logout());
 app.get("/", async (c) => {
   const search = c.req.query("search") ?? null;
   const messages = await db.getMessages(search);

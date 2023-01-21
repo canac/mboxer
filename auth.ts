@@ -21,7 +21,8 @@ export async function isAuthenticated(request: Request): Promise<boolean> {
   }
 }
 
-// Attempt to login with the provided password
+// Attempt to login with the provided password and return a response that will
+// login to the application if it is correct
 export async function login(password: string): Promise<Response> {
   if (password !== env.MBOX_PASSWORD) {
     throw new Error("Incorrect password");
@@ -37,6 +38,19 @@ export async function login(password: string): Promise<Response> {
       location: "/",
       "set-cookie":
         `jwt=${jwt};Max-Age=2592000;Path=/;Secure;HttpOnly;SameSite=Strict;`,
+    },
+    status: 302,
+  });
+}
+
+// Return a response that will logout of the application
+export function logout(): Response {
+  return new Response(null, {
+    headers: {
+      location: "/login",
+      "set-cookie": `jwt=_;Expires=${
+        new Date(0).toUTCString()
+      }Path=/;Secure;HttpOnly;SameSite=Strict;`,
     },
     status: 302,
   });
