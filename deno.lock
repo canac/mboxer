@@ -1,5 +1,5 @@
 {
-  "version": "2",
+  "version": "3",
   "remote": {
     "https://deno.land/std@0.160.0/_util/assert.ts": "e94f2eb37cebd7f199952e242c77654e43333c1ac4c5c700e929ea3aa5489f74",
     "https://deno.land/std@0.160.0/_util/os.ts": "8a33345f74990e627b9dfe2de9b040004b08ea5146c7c9e8fe9a29070d193934",
@@ -142,6 +142,7 @@
     "https://deno.land/std@0.171.0/testing/asserts.ts": "984ab0bfb3faeed92ffaa3a6b06536c66811185328c5dd146257c702c41b01ab",
     "https://deno.land/std@0.171.0/testing/bdd.ts": "c5ca6d85940dbcc19b4d2bc3608d49ab65d81470aa91306d5efa4b0d5c945731",
     "https://deno.land/std@0.171.0/types.d.ts": "220ed56662a0bd393ba5d124aa6ae2ad36a00d2fcbc0e8666a65f4606aaa9784",
+    "https://deno.land/x/dir@1.5.1/data_local_dir/mod.ts": "91eb1c4bfadfbeda30171007bac6d85aadacd43224a5ed721bbe56bc64e9eb66",
     "https://deno.land/x/hono@v3.0.0-rc.4/compose.ts": "6cf42a9779df9bb53294f796f07796961e2d70ed348cf0dd334669ac2de2fd95",
     "https://deno.land/x/hono@v3.0.0-rc.4/context.ts": "97bdf1bfd1e19a3362e03026be043efae44100c3920e7f3215d246c78c3ad64e",
     "https://deno.land/x/hono@v3.0.0-rc.4/deno/serve-static.ts": "5460ccc3ebeafd8a1e0e96826c6c47ce6e6ee965f1b7217f5f14f466bded28c6",
@@ -298,6 +299,8 @@
     "https://deno.land/x/postgres@v0.17.0/query/types.ts": "a6dc8024867fe7ccb0ba4b4fa403ee5d474c7742174128c8e689c3b5e5eaa933",
     "https://deno.land/x/postgres@v0.17.0/utils/deferred.ts": "dd94f2a57355355c47812b061a51b55263f72d24e9cb3fdb474c7519f4d61083",
     "https://deno.land/x/postgres@v0.17.0/utils/utils.ts": "19c3527ddd5c6c4c49ae36397120274c7f41f9d3cbf479cb36065d23329e9f90",
+    "https://deno.land/x/wasmbuild@0.15.6/loader/cache.ts": "362d03a2ceb3d3e130373102a5de6d54ffda659a0911c2fcc090c29c3555f7ef",
+    "https://deno.land/x/wasmbuild@0.15.6/loader/fetch.ts": "7d015203a93cbadd05034cbb6e726d35f47e1f51140d91e69aeddc5d71b06ec8",
     "https://deno.land/x/zod@v3.20.2/ZodError.ts": "b4ff327bd2870a7c0930b30cb1d6eb741d36a5a7d0755fc3aa7146c108bc8a0e",
     "https://deno.land/x/zod@v3.20.2/errors.ts": "5285922d2be9700cc0c70c95e4858952b07ae193aa0224be3cbd5cd5567eabef",
     "https://deno.land/x/zod@v3.20.2/external.ts": "a6cfbd61e9e097d5f42f8a7ed6f92f93f51ff927d29c9fbaec04f03cbce130fe",
