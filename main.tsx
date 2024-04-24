@@ -2,7 +2,7 @@
 import { serve } from "std/http/server.ts";
 import { readLines } from "std/io/mod.ts";
 import { readerFromStreamReader } from "std/streams/mod.ts";
-import html, { h, JSX } from "htm";
+import html, { h } from "htm";
 import { Hono } from "hono";
 import { serveStatic } from "hono/middleware";
 import { isAuthenticated, login, logout } from "./auth.ts";

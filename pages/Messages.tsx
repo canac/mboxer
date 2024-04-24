@@ -1,5 +1,5 @@
 /** @jsx h */
-import { h, JSX } from "htm";
+import { h } from "htm";
 import { Message } from "../message.ts";
 
 export function Messages(
