@@ -17,9 +17,10 @@ import { parseMessage, readMessages } from "./parse.ts";
 
 const db = new Database(env.POSTGRES_URL);
 
-function document(body: JSX.Element): Promise<Response> {
+function document(body: JSX.Element, title?: string): Promise<Response> {
   return html({
     body,
+    title: title ? `mboxer | ${title}` : "mboxer",
     headers: {
       "Content-Security-Policy":
         "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://unpkg.com; font-src *; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content; base-uri 'none';",
@@ -51,6 +52,7 @@ app.get("/login", (_) => {
     <Layout page="login">
       <Login />
     </Layout>,
+    "Login",
   );
 });
 app.post("/login", async (c) => {
@@ -85,6 +87,7 @@ app.get("/message/:id", async (c) => {
     <Layout page="message">
       <Message message={message} />
     </Layout>,
+    message.subject,
   );
 });
 app.get("/import", (_) => {
@@ -92,6 +95,7 @@ app.get("/import", (_) => {
     <Layout page="import">
       <Import />
     </Layout>,
+    "Import",
   );
 });
 app.post("/import", async (c) => {
