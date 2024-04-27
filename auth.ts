@@ -16,7 +16,7 @@ export async function isAuthenticated(request: Request): Promise<boolean> {
   try {
     const { payload } = await jose.jwtVerify(jwt, secret);
     return payload.authenticated === true;
-  } catch (_) {
+  } catch {
     return false;
   }
 }

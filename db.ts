@@ -33,7 +33,7 @@ export class Database {
         { id },
       );
       return row ? messageSchema.parse(row) : null;
-    } catch (_) {
+    } catch {
       return null;
     }
   }
