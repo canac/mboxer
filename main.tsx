@@ -4,7 +4,7 @@ import { readLines } from "std/io/mod.ts";
 import { readerFromStreamReader } from "std/streams/mod.ts";
 import html, { h } from "htm";
 import { Hono } from "hono";
-import { serveStatic } from "hono/middleware";
+import { serveStatic } from "hono/middleware.ts";
 import { isAuthenticated, login, logout } from "./auth.ts";
 import { Database } from "./db.ts";
 import { env } from "./env.ts";
@@ -37,7 +37,7 @@ app.use("/static/*", serveStatic({ root: "./" }));
 app.use(
   "*",
   async (c, next) => {
-    const authenticated = await isAuthenticated(c.req);
+    const authenticated = await isAuthenticated(c);
     if (new URL(c.req.url).pathname === "/login" !== authenticated) {
       // Passthrough if the user is unauthenticated and is going to the login
       // page or is authenticated and isn't going to the login page
@@ -62,12 +62,12 @@ app.post("/login", async (c) => {
     return c.status(400);
   }
   try {
-    return await login(password);
+    return await login(c, password);
   } catch (err) {
     return new Response(err.toString() ?? "Forbidden", { status: 403 });
   }
 });
-app.post("/logout", (_) => logout());
+app.post("/logout", (c) => logout(c));
 app.get("/", async (c) => {
   const search = c.req.query("search") ?? null;
   const messages = await db.getMessages(search);

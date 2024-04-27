@@ -1,5 +1,11 @@
-import { env } from "./env.ts";
+import { Context } from "hono/mod.ts";
+import {
+  deleteCookie,
+  getCookie,
+  setCookie,
+} from "hono/helper/cookie/index.ts";
 import * as jose from "jose";
+import { env } from "./env.ts";
 
 const alg = "HS256";
 const secret = new TextEncoder().encode(
@@ -7,8 +13,10 @@ const secret = new TextEncoder().encode(
 );
 
 // Determine whether the request is authenticated
-export async function isAuthenticated(request: Request): Promise<boolean> {
-  const jwt = request.cookie("jwt");
+export async function isAuthenticated(
+  c: Context,
+): Promise<boolean> {
+  const jwt = getCookie(c, "jwt");
   if (!jwt) {
     return false;
   }
@@ -23,7 +31,7 @@ export async function isAuthenticated(request: Request): Promise<boolean> {
 
 // Attempt to login with the provided password and return a response that will
 // login to the application if it is correct
-export async function login(password: string): Promise<Response> {
+export async function login(c: Context, password: string): Promise<Response> {
   if (password !== env.MBOX_PASSWORD) {
     throw new Error("Incorrect password");
   }
@@ -33,25 +41,17 @@ export async function login(password: string): Promise<Response> {
     .setIssuedAt()
     .setExpirationTime("30d")
     .sign(secret);
-  return new Response(null, {
-    headers: {
-      location: "/",
-      "set-cookie":
-        `jwt=${jwt};Max-Age=2592000;Path=/;Secure;HttpOnly;SameSite=Strict;`,
-    },
-    status: 302,
+  setCookie(c, "jwt", jwt, {
+    httpOnly: true,
+    maxAge: 2592000,
+    sameSite: "Strict",
+    secure: true,
   });
+  return c.redirect("/login");
 }
 
 // Return a response that will logout of the application
-export function logout(): Response {
-  return new Response(null, {
-    headers: {
-      location: "/login",
-      "set-cookie": `jwt=_;Expires=${
-        new Date(0).toUTCString()
-      }Path=/;Secure;HttpOnly;SameSite=Strict;`,
-    },
-    status: 302,
-  });
+export function logout(c: Context): Response {
+  deleteCookie(c, "jwt");
+  return c.redirect("/");
 }
