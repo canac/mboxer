@@ -1,6 +1,6 @@
 {
   "imports": {
-    "std/": "https://deno.land/std@0.171.0/",
+    "std/": "https://deno.land/std@0.223.0/",
     "hono": "https://deno.land/x/hono@v4.2.8/mod.ts",
     "hono/": "https://deno.land/x/hono@v4.2.8/",
     "htm": "https://deno.land/x/htm@0.2.3/mod.ts",
@@ -9,7 +9,7 @@
     "zod": "https://deno.land/x/zod@v3.20.2/mod.ts"
   },
   "tasks": {
-    "dev": "deno run --watch --allow-env=PORT,POSTGRES_URL --allow-net --allow-read=. main.tsx",
+    "dev": "deno run --watch --allow-env --allow-net --allow-read=. main.tsx",
     "test": "deno test --watch --allow-read ./lib .",
     "wasmbuild": "deno run -A https://deno.land/x/wasmbuild@0.15.6/main.ts"
   }

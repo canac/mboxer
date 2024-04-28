@@ -1,7 +1,5 @@
 /** @jsx h */
-import { serve } from "std/http/server.ts";
-import { readLines } from "std/io/mod.ts";
-import { readerFromStreamReader } from "std/streams/mod.ts";
+import { TextDelimiterStream } from "std/streams/text_delimiter_stream.ts";
 import html, { h } from "htm";
 import { Hono } from "hono";
 import { serveStatic } from "hono/middleware.ts";
@@ -26,9 +24,7 @@ function document(body: JSX.Element, title?: string): Promise<Response> {
         "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://unpkg.com; font-src *; form-action 'self'; upgrade-insecure-requests; block-all-mixed-content; base-uri 'none';",
     },
     scripts: [{ src: "/static/script.js" }],
-    links: [
-      { rel: "stylesheet", href: "/static/styles.css" },
-    ],
+    links: [{ rel: "stylesheet", href: "/static/styles.css" }],
   });
 }
 
@@ -105,8 +101,11 @@ app.post("/import", async (c) => {
     return c.text("mailbox upload is missing or is not a file", 500);
   }
 
-  const reader = readerFromStreamReader(mbox.stream().getReader());
-  const messages = readMessages(readLines(reader));
+  const messages = readMessages(
+    mbox.stream().pipeThrough(new TextDecoderStream()).pipeThrough(
+      new TextDelimiterStream("\n"),
+    ),
+  );
 
   let count = 0;
   let errors = 0;
@@ -128,4 +127,4 @@ app.post("/import", async (c) => {
 app.onError((error, c) => {
   return c.text(error.message, 500);
 });
-serve(app.fetch, { port: env.PORT });
+Deno.serve({ port: env.PORT }, app.fetch);

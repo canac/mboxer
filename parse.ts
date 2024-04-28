@@ -5,7 +5,7 @@ const { parse_message } = await instantiate();
 
 // Given an iterator of lines, return an iterator of messages
 export async function* readMessages(
-  lines: AsyncIterableIterator<string>,
+  lines: ReadableStream<string>,
 ): AsyncIterableIterator<string> {
   let firstLine = true;
   let message = "";

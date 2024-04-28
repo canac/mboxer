@@ -2,11 +2,7 @@ import { load } from "std/dotenv/mod.ts";
 import { z } from "zod";
 
 const envVars = ["JWT_SECRET", "MBOX_PASSWORD", "PORT", "POSTGRES_URL"];
-await load({
-  export: true,
-  examplePath: "",
-  restrictEnvAccessTo: envVars,
-});
+await load({ export: true });
 
 const envSchema = z.object({
   JWT_SECRET: z.string(),
