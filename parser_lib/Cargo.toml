@@ -8,6 +8,6 @@ crate_type = ["cdylib"]
 
 [dependencies]
 ammonia = "3.3.0"
-mail-parser = { version = "0.8.0", default-features = false }
+mail-parser = { version = "0.9.3", default-features = false }
 uuid = { version = "1.8.0", default_features = false, features = ["v5"] }
 wasm-bindgen = "=0.2.90"

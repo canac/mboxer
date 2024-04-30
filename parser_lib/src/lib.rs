@@ -1,7 +1,29 @@
 use ammonia::Builder;
-use mail_parser::{HeaderValue, Message};
+use mail_parser::{Addr, Address, MessageParser};
 use uuid::{uuid, Uuid};
 use wasm_bindgen::prelude::*;
+
+// Convert an iterator of addresses to a human-readable address string
+fn format_addresses<'a>(
+  addresses: impl Iterator<Item = &'a Addr<'a>>,
+) -> String {
+  addresses
+    .enumerate()
+    .fold(String::new(), |mut total, (index, address)| {
+      if index != 0 {
+        total += ", "
+      }
+      match (address.name.as_ref(), address.address.as_ref()) {
+        (None, None) => {}
+        (Some(name), None) => total += name,
+        (None, Some(address)) => total += address,
+        (Some(name), Some(address)) => {
+          total += &format!("{} <{}>", name, address)
+        }
+      };
+      total
+    })
+}
 
 #[wasm_bindgen]
 pub struct MessageResult {
@@ -44,7 +66,9 @@ const NAMESPACE: Uuid = uuid!("3ea7556b-df2f-4126-9ffc-3e367fc8fb43");
 
 #[wasm_bindgen]
 pub fn parse_message(raw_message: &str) -> MessageResult {
-  let message = Message::parse(raw_message.as_bytes()).unwrap();
+  let message = MessageParser::default()
+    .parse(raw_message.as_bytes())
+    .unwrap();
 
   let id = Uuid::new_v5(
     &NAMESPACE,
@@ -52,17 +76,12 @@ pub fn parse_message(raw_message: &str) -> MessageResult {
     message.message_id().unwrap_or(raw_message).as_bytes(),
   );
 
-  let sender = match message.from() {
-    HeaderValue::Address(address) => {
-      match (address.name.as_ref(), address.address.as_ref()) {
-        (None, None) => None,
-        (Some(name), None) => Some(name.to_string()),
-        (None, Some(address)) => Some(address.to_string()),
-        (Some(name), Some(address)) => Some(format!("{} <{}>", name, address)),
-      }
+  let sender = message.from().map(|from| match from {
+    Address::List(addresses) => format_addresses(addresses.iter()),
+    Address::Group(groups) => {
+      format_addresses(groups.iter().flat_map(|group| group.addresses.iter()))
     }
-    _ => None,
-  };
+  });
 
   MessageResult {
     id: id.to_string(),
