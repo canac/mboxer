@@ -1,5 +1,5 @@
 use ammonia::Builder;
-use mail_parser::{Addr, Address, MessageParser};
+use mail_parser::{Addr, Address, MessageParser, MimeHeaders};
 use uuid::{uuid, Uuid};
 use wasm_bindgen::prelude::*;
 
@@ -26,12 +26,45 @@ fn format_addresses<'a>(
 }
 
 #[wasm_bindgen]
+#[derive(Clone)]
+pub struct Attachment {
+  id: String,
+  filename: Option<String>,
+  mime_type: Option<String>,
+  contents: Vec<u8>,
+}
+
+#[wasm_bindgen]
+impl Attachment {
+  #[wasm_bindgen(getter)]
+  pub fn id(&self) -> String {
+    self.id.clone()
+  }
+
+  #[wasm_bindgen(getter)]
+  pub fn filename(&self) -> Option<String> {
+    self.filename.clone()
+  }
+
+  #[wasm_bindgen(getter)]
+  pub fn mime_type(&self) -> Option<String> {
+    self.mime_type.clone()
+  }
+
+  #[wasm_bindgen(getter)]
+  pub fn contents(&self) -> Vec<u8> {
+    self.contents.clone()
+  }
+}
+
+#[wasm_bindgen]
 pub struct MessageResult {
   id: String,
   sender: Option<String>,
   subject: Option<String>,
   date: Option<String>,
   content: Option<String>,
+  attachments: Vec<Attachment>,
 }
 
 #[wasm_bindgen]
@@ -60,9 +93,14 @@ impl MessageResult {
   pub fn content(&self) -> Option<String> {
     self.content.clone()
   }
+
+  #[wasm_bindgen(getter)]
+  pub fn attachments(&self) -> Vec<Attachment> {
+    self.attachments.clone()
+  }
 }
 
-const NAMESPACE: Uuid = uuid!("3ea7556b-df2f-4126-9ffc-3e367fc8fb43");
+const MESSAGE_NAMESPACE: Uuid = uuid!("3ea7556b-df2f-4126-9ffc-3e367fc8fb43");
 
 #[wasm_bindgen]
 pub fn parse_message(raw_message: &str) -> MessageResult {
@@ -70,8 +108,8 @@ pub fn parse_message(raw_message: &str) -> MessageResult {
     .parse(raw_message.as_bytes())
     .unwrap();
 
-  let id = Uuid::new_v5(
-    &NAMESPACE,
+  let message_id = Uuid::new_v5(
+    &MESSAGE_NAMESPACE,
     // Use the id or the message contents itself to generate the uuid
     message.message_id().unwrap_or(raw_message).as_bytes(),
   );
@@ -83,8 +121,29 @@ pub fn parse_message(raw_message: &str) -> MessageResult {
     }
   });
 
+  let attachments = message
+    .attachments()
+    .map(|attachment| {
+      let filename = attachment.attachment_name();
+      let mime_type = attachment.content_type().map(|content_type| {
+        match content_type.subtype() {
+          None => content_type.c_type.to_string(),
+          Some(subtype) => format!("{}/{subtype}", content_type.c_type),
+        }
+      });
+      let contents = attachment.contents();
+      let id = Uuid::new_v5(&message_id, contents);
+      Attachment {
+        id: id.to_string(),
+        filename: filename.map(|message| message.to_string()),
+        mime_type,
+        contents: contents.to_owned(),
+      }
+    })
+    .collect::<Vec<_>>();
+
   MessageResult {
-    id: id.to_string(),
+    id: message_id.to_string(),
     sender,
     subject: message.subject().map(|message| message.to_string()),
     date: message.date().map(|date| date.to_rfc3339()),
@@ -98,5 +157,6 @@ pub fn parse_message(raw_message: &str) -> MessageResult {
         .trim()
         .to_string()
     }),
+    attachments,
   }
 }

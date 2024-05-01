@@ -162,6 +162,18 @@ a:active.message-row {
   color: var(--gray-6);
 }
 
+.message .attachments {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-block: var(--size-2);
+  gap: var(--size-1) var(--size-5);
+
+  & h3 {
+    margin: 0;
+  }
+}
+
 .login, .import {
   display: flex;
   width: 100%;

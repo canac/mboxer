@@ -14,4 +14,12 @@ CREATE TABLE message (
   date TIMESTAMP NOT NULL,
   content VARCHAR NOT NULL
 );
+
+CREATE TABLE attachment (
+  id UUID PRIMARY KEY NOT NULL,
+  message_id UUID REFERENCES message(id),
+  filename VARCHAR,
+  mime_type VARCHAR,
+  contents BYTEA NOT NULL
+);
 ```

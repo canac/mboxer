@@ -76,15 +76,32 @@ app.get("/", async (c) => {
 app.get("/message/:id", async (c) => {
   const id = c.req.param("id");
   const message = await db.getMessage(id);
+  const attachments = await db.getMessageAttachments(id);
   if (!message) {
     return c.notFound();
   }
   return document(
     <Layout page="message">
-      <Message message={message} />
+      <Message message={message} attachments={attachments} />
     </Layout>,
     message.subject,
   );
+});
+app.get("/message/:message_id/attachment/:attachment_id", async (c) => {
+  const attachment = await db.getAttachment(c.req.param("attachment_id"));
+  if (!attachment || attachment.message_id !== c.req.param("message_id")) {
+    return c.notFound();
+  }
+
+  const headers = new Headers({
+    "Content-Disposition": attachment.filename
+      ? `attachment; filename=${attachment.filename}`
+      : "attachment",
+  });
+  if (attachment.mime_type) {
+    headers.set("Content-Type", attachment.mime_type);
+  }
+  return new Response(attachment.contents, { headers });
 });
 app.get("/import", (_) => {
   return document(
@@ -109,11 +126,20 @@ app.post("/import", async (c) => {
 
   let count = 0;
   let errors = 0;
-  const insertPromises: Promise<void>[] = [];
+  const insertPromises: Promise<void[]>[] = [];
   for await (const rawMessage of messages) {
     try {
       // Insert the messages in parallel and wait for all of them at the end
-      insertPromises.push(db.insertMessage(parseMessage(rawMessage)));
+      const { message, attachments } = parseMessage(rawMessage);
+      insertPromises.push(
+        db.insertMessage(message).then(() =>
+          Promise.all(
+            attachments.map((attachment) =>
+              db.insertAttachment(message, attachment)
+            ),
+          )
+        ),
+      );
       ++count;
     } catch (err) {
       console.error(err);
